@@ -62,7 +62,7 @@ export default {
         showBottomSettings: false,
         addingInStart: false,
         settingTitle: 'settingOff',
-        settingBottom: 'settingOff'
+        settingBottom: 'settingOff',
     }
   },
   computed:{
@@ -73,7 +73,7 @@ export default {
       if (this.tasks.length == 0) {
         return 1
       } else if (this.addingInStart === false) {
-        return (this.tasks.length - 1) +1
+        return this.tasks.length + 1
       } else {
         return this.tasks[0].number - 1
       }
