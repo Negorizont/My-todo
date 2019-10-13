@@ -7,12 +7,15 @@
           <button class="title__pagination"><</button>
           <button class="title__pagination">></button>
         </div>
-        <button class="title__settings">
+        <button class="title__settings-button" @click="showTitleSettings = !showTitleSettings">
           <img src="./assets/ellipsis.png" alt="">
         </button>
+        <div v-if="showTitleSettings" class="title__settings">
+          <button @click="reverseList()" class="settings__reverseList" :class="settingTitle">Обратная сортировка</button>
+        </div>
       </div>
       <div class="app-container__task-list">
-        <div class="task-list__task " v-for="(task, index) in this.$store.getters.getItems" :key="index">
+        <div class="task-list__task " v-for="(task, index) in tasks" :key="index">
           <span>{{ index+1 }}) {{ task.title }}</span>
           <div class="task__buttons">
             <button class="task__button">🖊️</button>
@@ -26,12 +29,17 @@
           rows="3" 
           placeholder="Enter a title for this card..."
           v-model="myTodo"
+          @focus="error = false"
         ></textarea>
+        <div v-if="error" class="add-task__error">Введите текст!</div>
         <div class="add-task__buttons">
           <button class="add-task__add-card-button" @click="addToDo">Add Card</button>
-          <button class="add-task__settings">
+          <button @click="showBottomSettings = !showBottomSettings" class="add-task__settings">
             <img src="./assets/ellipsis.png" alt="">
           </button>
+          <div v-if="showBottomSettings" class="buttons__settings">
+            <button @click="selectPosition()" class="add-task__reverseList" :class="settingBottom">Добавлять в начало</button>
+          </div>
         </div>
       </div>
     </div>
@@ -47,38 +55,76 @@ export default {
   },
   data() {
     return {
-        myTodo: ''
+        myTodo: '',
+        error: false,
+        showTitleSettings: false,
+        reverseSort: false,
+        showBottomSettings: false,
+        addingInStart: false,
+        settingTitle: 'settingOff',
+        settingBottom: 'settingOff'
+    }
+  },
+  computed:{
+    tasks(){
+      return (this.$store.getters.getItems)
+    },
+    number(){
+      if (this.tasks.length == 0) {
+        return 1
+      } else if (this.addingInStart === false) {
+        return (this.tasks.length - 1) +1
+      } else {
+        return this.tasks[0].number - 1
+      }
     }
   },
   methods: {
     addToDo: function () {
-      this.errors = ''
-
+      if (this.reverseSort == true){
+        this.reverseList()
+      }
       if (this.myTodo !== '') {
         db.collection('items').add({
           title: this.myTodo,
-          created_at: Date.now()
+          created_at: Date.now(),
+          number: this.number
         }).then((response) => {
           if (response) {
             this.myTodo = ''
           }
-        }).catch((error) => {
-          this.errors = error
-        })
+        })    
       } else {
-        this.errors = 'Please enter some text'
+        this.error = true
       }
     },
     deleteItem: function (id) {
       if (id) {
-        db.collection("items").doc(id).delete().then(function() {
-          console.log('Document successfully deleted')
-        }).catch(function(error) {
-          this.error = error
-        })
-      } else {
-        this.error = 'Invalid ID'
+        db.collection("items").doc(id).delete()
       }
+    },
+    reverseList(){
+      this.tasks.reverse()
+      this.reverseSort = !this.reverseSort
+
+      if (this.settingTitle !== 'settingOff') {
+        this.settingTitle = 'settingOff'
+      } else  if (this.settingTitle !== 'settingOn') {
+        this.settingTitle = 'settingOn'
+      }
+
+      setTimeout(() => this.showTitleSettings = false, 500)
+    },
+    selectPosition(){
+      this.addingInStart = !this.addingInStart
+
+      if (this.settingBottom !== 'settingOff') {
+        this.settingBottom = 'settingOff'
+      } else  if (this.settingBottom !== 'settingOn') {
+        this.settingBottom = 'settingOn'
+      }
+
+      setTimeout(() => this.showBottomSettings = false, 500)
     }
   }
 }
@@ -87,6 +133,10 @@ export default {
 <style scoped>
   html{
     min-height: 100%;
+  }
+  button {
+    background: none;
+    border: none;
   }
 
   .background-block {
@@ -109,21 +159,35 @@ export default {
   }
 
   .app-container__title {
+    position: relative;
     font-weight: bold;
     font-size: 30px;
     display: flex;
     margin-bottom: 10px;
   }
 
-  .title__settings,
-  .add-task__settings{
-    border: none;
-    background: none;
-  }
-
-  .title__settings img,
+  .title__settings-button img,
   .add-task__settings img {
     width: 30px;
+  }
+  
+  .title__settings {
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 30px;
+    right: 0;
+    padding: 5px;
+    border-radius: 5px;
+  }
+  
+  .settings__reverseList {
+    margin: 0;
+    background: blue;
+    color: #fff;
+    font-size: 15px;
+    padding: 5px;
+    border-radius: 5px;
   }
 
   .buttons-container{
@@ -160,11 +224,6 @@ export default {
     background-color: #F5F6F7;
   }
 
-  .task__button {
-    border: none;
-    background: none;
-  }
-
   .add-task__input-field{
     box-sizing: border-box;
     width: 100%;
@@ -175,7 +234,17 @@ export default {
     box-shadow: 0 1px 0 0 #B0B8BE;
   }
 
+  .add-task__error {
+    color: #fff;
+    background-color: red;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+
   .add-task__buttons {
+    position: relative;
     display: flex;
     justify-content: space-between;
   }
@@ -192,6 +261,29 @@ export default {
   
   .add-task__add-card-button:active {
     background-color: #8CBE29;
+  } 
+
+  .buttons__settings{
+    position: absolute;
+    bottom: 40px;
+    right: 0;
+  }
+
+  .add-task__reverseList{
+    margin: 0;
+    background-color: #9C9EA0;
+    color: #fff;
+    font-size: 15px;
+    padding: 5px;
+    border-radius: 5px;
+  }
+
+  .settingOn {
+    background: linear-gradient(to right, #6ED55E 50%, #9C9EA0 50%)
+  }
+
+  .settingOff {
+    background: linear-gradient(to right, #9C9EA0 50%, #FF5959 50%)
   }
 
   @media screen and (min-width: 700px){
@@ -223,13 +315,13 @@ export default {
       margin-bottom: 10px;
     }
 
-    .title__settings,
+    .title__settings-button,
     .add-task__settings{
       border: none;
       background: none;
     }
 
-    .title__settings img,
+    .title__settings-button img,
     .add-task__settings img {
       width: 40px;
     }
@@ -343,13 +435,13 @@ export default {
       margin-bottom: 10px;
     }
 
-    .title__settings,
+    .title__settings-button,
     .add-task__settings{
       border: none;
       background: none;
     }
 
-    .title__settings img,
+    .title__settings-button img,
     .add-task__settings img {
       width: 50px;
     }

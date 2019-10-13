@@ -17,10 +17,10 @@ export default new Vuex.Store({
     setItems: state => {
       let items = []
 
-      db.collection('items').orderBy('created_at').onSnapshot((snapshot) => {
+      db.collection('items').orderBy('number').onSnapshot((snapshot) => {
         items = []
         snapshot.forEach((doc) => {
-          items.push({ id: doc.id, title: doc.data().title })
+          items.push({ id: doc.id, title: doc.data().title, number:  doc.data().number})
         })
 
         state.items = items
