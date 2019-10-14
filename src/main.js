@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
+import TaskList from './components/TaskList.vue'
+import Pagination from './components/Pagination.vue'
 import router from './router'
 import store from './store'
 import firebase from 'firebase'
@@ -20,6 +22,9 @@ var config = {
 firebase.initializeApp(config)
 
 export const db = firebase.firestore()
+
+Vue.component('task-list', TaskList)
+Vue.component('pagination', Pagination)
 
 new Vue({
   router,

@@ -6,12 +6,13 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    items: null
+    items: [],
+    controller: false
   },
   getters: {
     getItems: state => {
       return state.items
-    }
+    },
   },
   mutations: {
     setItems: state => {
@@ -25,11 +26,11 @@ export default new Vuex.Store({
 
         state.items = items
       })
-    }
+    },
   },
   actions: {
     setItems: context => {
       context.commit('setItems')
-    }
+    },
   }
 })

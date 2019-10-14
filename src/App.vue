@@ -2,27 +2,22 @@
   <div class="background-block">
     <div class="background-block__app-container">
       <div class="app-container__title">
+
         <h1 class="title__name">Задачи</h1>
-        <div class="buttons-container">
-          <button class="title__pagination"><</button>
-          <button class="title__pagination">></button>
-        </div>
+
+        <pagination></pagination>
+
         <button class="title__settings-button" @click="showTitleSettings = !showTitleSettings">
           <img src="./assets/ellipsis.png" alt="">
         </button>
+
         <div v-if="showTitleSettings" class="title__settings">
           <button @click="reverseList()" class="settings__reverseList" :class="settingTitle">Обратная сортировка</button>
         </div>
       </div>
-      <div class="app-container__task-list">
-        <div class="task-list__task " v-for="(task, index) in tasks" :key="index">
-          <span>{{ index+1 }}) {{ task.title }}</span>
-          <div class="task__buttons">
-            <button class="task__button">🖊️</button>
-            <button class="task__button" @click="deleteItem(task.id)">✖️</button>
-          </div>
-        </div>
-      </div>
+
+      <task-list></task-list> 
+
       <div class="app-container__add-task">
         <textarea 
           class="add-task__input-field" 
@@ -67,15 +62,25 @@ export default {
   },
   computed:{
     tasks(){
+      if (this.$store.state.controller === true) {
+        this.settingTitle = 'settingOff'
+        this.$store.state.controller = false
+      }
       return (this.$store.getters.getItems)
     },
     number(){
       if (this.tasks.length == 0) {
         return 1
       } else if (this.addingInStart === false) {
-        return this.tasks.length + 1
+        return this.tasks[this.tasks.length - 1].number + 1
       } else {
         return this.tasks[0].number - 1
+      }
+    },
+    buttonControlStyle(){
+      if (this.$store.state.controller === true) {
+        this.settingTitle = 'settingOff'
+        this.$store.state.controller = false
       }
     }
   },
@@ -91,16 +96,11 @@ export default {
           number: this.number
         }).then((response) => {
           if (response) {
-            this.myTodo = ''
+            this.myTodo = '';
           }
         })    
       } else {
         this.error = true
-      }
-    },
-    deleteItem: function (id) {
-      if (id) {
-        db.collection("items").doc(id).delete()
       }
     },
     reverseList(){
@@ -130,13 +130,19 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
   html{
     min-height: 100%;
   }
   button {
     background: none;
     border: none;
+  }
+
+  .editCurrent{ 
+    font-size: 30px; 
+    font-weight: bold;
+    cursor: pointer;
   }
 
   .background-block {
@@ -164,6 +170,11 @@ export default {
     font-size: 30px;
     display: flex;
     margin-bottom: 10px;
+  }
+
+  .title__name {
+    font-size: 30px;
+    margin: 0;
   }
 
   .title__settings-button img,
