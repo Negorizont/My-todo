@@ -7,7 +7,7 @@
 
         <pagination></pagination>
 
-        <button class="title__settings-button" @click="showTitleSettings = !showTitleSettings">
+        <button class="title__settings-button" @click="showTitleSettingsF()">
           <img src="./assets/ellipsis.png" alt="">
         </button>
 
@@ -62,10 +62,6 @@ export default {
   },
   computed:{
     tasks(){
-      if (this.$store.state.controller === true) {
-        this.settingTitle = 'settingOff'
-        this.$store.state.controller = false
-      }
       return (this.$store.getters.getItems)
     },
     number(){
@@ -75,12 +71,6 @@ export default {
         return this.tasks[this.tasks.length - 1].number + 1
       } else {
         return this.tasks[0].number - 1
-      }
-    },
-    buttonControlStyle(){
-      if (this.$store.state.controller === true) {
-        this.settingTitle = 'settingOff'
-        this.$store.state.controller = false
       }
     }
   },
@@ -93,10 +83,14 @@ export default {
         db.collection('items').add({
           title: this.myTodo,
           created_at: Date.now(),
-          number: this.number
+          number: this.number,
+          status: ''
         }).then((response) => {
           if (response) {
             this.myTodo = '';
+            if ( +(this.$router.currentRoute.params["id"]) !== 1) {
+              this.$router.push('/tasks/1')
+            } 
           }
         })    
       } else {
@@ -125,8 +119,25 @@ export default {
       }
 
       setTimeout(() => this.showBottomSettings = false, 500)
+    },
+    showTitleSettingsF() {
+      this.showTitleSettings = !this.showTitleSettings;
+
+      if (this.$store.state.controller === true) {
+        this.settingTitle = 'settingOff'
+        this.$store.state.controller = false
+      }
     }
-  }
+  },
+  // watch: {
+  //   controllerStyle() {
+  //     console.log(this.$store.state.controller)
+  //     if (this.$store.state.controller === true) {
+  //       this.settingTitle = 'settingOff'
+  //       this.$store.state.controller = false
+  //     }
+  //   }
+  // }
 }
 </script>
 

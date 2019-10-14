@@ -32,6 +32,11 @@ export default {
       this.id += num
       this.$router.push('/tasks/' + this.id)
     }
+  },
+  watch: {
+    $route(toR, fromR) {
+      this.id = +(toR.params["id"])
+    }
   }
 }
 </script>

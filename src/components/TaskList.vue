@@ -1,7 +1,13 @@
 <template>
   <div class="app-container__task-list">
-    <div class="task-list__task " v-for="(task, index) in paginateList" :key="index">
-      <span>{{ index+1 }}) {{ task.title }}</span>
+    <div 
+      class="task-list__task " 
+      v-for="(task, index) in paginateList" 
+      :key="index"
+      :class="task.status"
+      @dblclick="completeTask(task.status, task.id)" 
+    >
+      <span>{{ (index+1) + listNumeration }}) {{ task.title }}</span>
       <div class="task__buttons">
         <button class="task__button">🖊️</button>
         <button class="task__button" @click="deleteItem(task.id)">✖️</button>
@@ -19,6 +25,9 @@ export default {
     }
   },
   computed: {
+    listNumeration(){
+      return this.id * 10 - 10
+    },
     perPage(){
       return this.id * 10
     },
@@ -35,18 +44,37 @@ export default {
   methods: {
     deleteItem: function (id) {
       if (id) {
-        this.$store.state.controller = true
+        //this.$store.state.controller = true
+        this.$store.commit('checkController');
         db.collection("items").doc(id).delete()
       }
+    },
+    completeTask(style, id) {
+      if (style == 'completeTask') {
+        db.collection('items').doc(id).update({
+          status: ''
+        })
+      } else{
+        db.collection('items').doc(id).update({
+            status: 'completeTask'
+        })
+      }  
     }
   },
   watch: {
     $route(toR, fromR) {
       this.id = toR.params["id"]
-    }
+    },
   }
 }
 </script>
 
 <style>
+  .completeTask{
+    background-color: #6ED55E;
+    color: #fff;
+  }
+  .completeTask:hover{
+    background-color: #64C156;
+  }
 </style>

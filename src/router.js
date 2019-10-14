@@ -19,6 +19,11 @@ export default new Router({
           name: 'tasks'
         }
       ]
+    },
+    {
+      path: '/tasks/',
+      component: App,
+      redirect: '/tasks/1'
     }
   ]
 })
