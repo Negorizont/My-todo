@@ -1,30 +1,8 @@
 # My-todo
-# to-do-list
 
-## Project setup
-```
-npm install
-```
+### Приложение
 
-### Compiles and hot-reloads for development
 ```
-npm run serve
+ Данная работа отходит от требований ТЗ. Так как изначально неправильно начал делать, но при этом основной функционал работает. Основной ошибкой считаю: незнание структуризации кода на Vue.
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
