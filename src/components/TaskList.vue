@@ -92,4 +92,8 @@ export default {
     position: relative;
     min-height: 185px;
   }
+
+  .task__button{
+    cursor: pointer;
+  }
 </style>
