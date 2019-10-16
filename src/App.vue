@@ -191,6 +191,7 @@ export default {
     right: 0;
     padding: 5px;
     border-radius: 5px;
+    z-index: 1;
   }
   
   .settings__reverseList {

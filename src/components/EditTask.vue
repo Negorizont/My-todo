@@ -65,7 +65,7 @@ export default {
 
   .edit-task__input-field{
     box-sizing: border-box;
-    width: 50%;
+    width: 90%;
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 1px 0 0 #B0B8BE;
@@ -76,7 +76,7 @@ export default {
   .edit-task__buttons{
     display: flex;
     justify-content: space-between;
-    width: 40%;
+    width: 90%;
     margin: 0 auto;
   }
 
@@ -103,5 +103,24 @@ export default {
     color:red;
     width: 40%;
     margin: 0 auto 5px;
+  }
+
+  @media screen and (min-width: 700px) {
+    .edit-task__input-field{
+      box-sizing: border-box;
+      width: 50%;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 1px 0 0 #B0B8BE;
+      resize: none;
+      margin-bottom: 5px;
+    }
+
+    .edit-task__buttons{
+      display: flex;
+      justify-content: space-between;
+      width: 50%;
+      margin: 0 auto;
+    }
   }
 </style>
