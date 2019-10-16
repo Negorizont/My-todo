@@ -121,23 +121,13 @@ export default {
       setTimeout(() => this.showBottomSettings = false, 500)
     },
     showTitleSettingsF() {
-      this.showTitleSettings = !this.showTitleSettings;
-
+      this.showTitleSettings = !this.showTitleSettings
       if (this.$store.state.controller === true) {
         this.settingTitle = 'settingOff'
         this.$store.state.controller = false
       }
     }
-  },
-  // watch: {
-  //   controllerStyle() {
-  //     console.log(this.$store.state.controller)
-  //     if (this.$store.state.controller === true) {
-  //       this.settingTitle = 'settingOff'
-  //       this.$store.state.controller = false
-  //     }
-  //   }
-  // }
+  }
 }
 </script>
 

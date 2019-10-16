@@ -9,10 +9,12 @@
     >
       <span>{{ (index+1) + listNumeration }}) {{ task.title }}</span>
       <div class="task__buttons">
-        <button class="task__button">🖊️</button>
+        <button class="task__button" @click="editTask(task.id)">🖊️</button>
         <button class="task__button" @click="deleteItem(task.id)">✖️</button>
       </div>
     </div>
+
+    <edit-task :docId="editId" v-if="editBlock"></edit-task>
   </div>
 </template>
 
@@ -22,9 +24,13 @@ export default {
   data(){
     return {
       id: +(this.$router.currentRoute.params["id"]),
+      editId: 0
     }
   },
   computed: {
+    editBlock(){
+      return this.$store.state.editBlock
+    },
     listNumeration(){
       return this.id * 10 - 10
     },
@@ -44,7 +50,6 @@ export default {
   methods: {
     deleteItem: function (id) {
       if (id) {
-        //this.$store.state.controller = true
         this.$store.commit('checkController');
         db.collection("items").doc(id).delete()
       }
@@ -59,6 +64,10 @@ export default {
             status: 'completeTask'
         })
       }  
+    },
+    editTask(id){
+      this.editId = id
+      this.$store.commit('showEditBlock')
     }
   },
   watch: {
@@ -74,7 +83,13 @@ export default {
     background-color: #6ED55E;
     color: #fff;
   }
+
   .completeTask:hover{
     background-color: #64C156;
+  }
+
+  .app-container__task-list{
+    position: relative;
+    min-height: 185px;
   }
 </style>

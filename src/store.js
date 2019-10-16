@@ -7,7 +7,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     items: [],
-    controller: false
+    controller: false,
+    editBlock: false
   },
   getters: {
     getItems: state => {
@@ -29,6 +30,9 @@ export default new Vuex.Store({
     },
     checkController: state => {
       state.controller = true
+    },
+    showEditBlock: state => {
+      state.editBlock = !state.editBlock
     }
   },
   actions: {

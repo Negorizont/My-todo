@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import TaskList from './components/TaskList.vue'
 import Pagination from './components/Pagination.vue'
+import EditTask from './components/EditTask'
 import router from './router'
 import store from './store'
 import firebase from 'firebase'
@@ -25,6 +26,7 @@ export const db = firebase.firestore()
 
 Vue.component('task-list', TaskList)
 Vue.component('pagination', Pagination)
+Vue.component('edit-task', EditTask)
 
 new Vue({
   router,

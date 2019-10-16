@@ -9,7 +9,7 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '',
+      path: '/tasks',
       component: App,
       redirect: '/tasks/1',
       children: [
@@ -21,7 +21,7 @@ export default new Router({
       ]
     },
     {
-      path: '/tasks/',
+      path: '*',
       component: App,
       redirect: '/tasks/1'
     }
